@@ -95,29 +95,14 @@ export default function StaffView() {
       <main className="flex-1">
         {/* Header */}
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-10">
-          <div className="flex items-center md:hidden gap-2">
-            <Link href="/" className="p-1 -ml-1 text-gray-400 hover:text-gray-600 transition-colors">
+          <div className="flex items-center gap-2">
+            <Link href="/" className="p-1 -ml-1 text-gray-400 hover:text-gray-600 transition-colors md:hidden">
               <ChevronRight className="w-5 h-5 rotate-180" />
             </Link>
             <div className="flex items-center">
-              <Activity className="w-6 h-6 text-brand-500 mr-2" />
-              <span className="text-lg font-bold text-brand-900 tracking-tight">Agnos</span>
-            </div>
-          </div>
-          <div className="flex-1 flex justify-end items-center gap-4">
-            <div className="relative max-w-md w-full hidden sm:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input 
-                type="text" 
-                placeholder="Search patients..." 
-                className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-gray-50 hover:bg-white transition-colors"
-              />
-            </div>
-            <button className="p-2 text-gray-400 hover:text-gray-500 rounded-full hover:bg-gray-100 transition-colors">
-              <Bell className="w-5 h-5" />
-            </button>
-            <div className="w-8 h-8 bg-teal-600 rounded-full text-white flex items-center justify-center text-sm font-medium shadow-sm">
-              ST
+              <Activity className="w-6 h-6 text-brand-500 mr-2 md:hidden" />
+              <span className="text-lg font-bold text-brand-900 tracking-tight md:hidden">Agnos</span>
+              <span className="text-lg font-bold text-gray-900 tracking-tight hidden md:block">Dashboard Overview</span>
             </div>
           </div>
         </header>
