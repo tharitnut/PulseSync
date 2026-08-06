@@ -6,7 +6,6 @@ A modern, real-time web application built with Next.js that facilitates patient 
 
 ### 🏥 For Patients
 - **Responsive Registration Form:** A clean, mobile-friendly interface for inputting personal details, contact information, and medical demographics.
-- **Premium Glassmorphism UI:** Enjoy a modern, state-of-the-art aesthetic featuring vibrant mesh gradients, frosted glass panels, and smooth micro-animations.
 - **Real-Time Sync:** As the patient types, their progress is instantly synced to the staff dashboard.
 - **Form Validation:** Real-time feedback for required fields.
 
