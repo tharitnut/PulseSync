@@ -48,10 +48,20 @@ PUSHER_SECRET=your_secret
    - Staff view: [http://localhost:3000/staff](http://localhost:3000/staff)
 
 ## Project Structure
-- `app/patient/page.tsx`: The client-facing registration form that broadcasts typing and submission events.
-- `app/staff/page.tsx`: The staff dashboard that subscribes to Pusher channels to monitor patient activity.
-- `app/api/pusher/route.ts`: Serverless API route to securely trigger Pusher events.
-- `lib/pusher.ts`: Singleton configurations for the Pusher client and server.
+
+```text
+.
+├── app/
+│   ├── api/
+│   │   └── pusher/
+│   │       └── route.ts       # API route to securely trigger Pusher events
+│   ├── patient/
+│   │   └── page.tsx           # Patient registration form (broadcasts events)
+│   └── staff/
+│       └── page.tsx           # Staff dashboard (listens to events)
+└── lib/
+    └── pusher.ts              # Configurations for Pusher client and server
+```
 
 ## Real-Time Architecture
 When a patient types in any input field, a debounced API call is sent to `/api/pusher`, which triggers a `typing` event over WebSockets containing the patient's current form state. The staff dashboard listens for this event and dynamically updates the table and progress bars. When the form is submitted, a `submitted` event finalizes the record.
