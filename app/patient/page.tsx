@@ -136,18 +136,51 @@ export default function PatientForm() {
       });
 
       setStatus("success");
-      setTimeout(() => {
-        setStatus("idle");
-        setFormData({ firstName: "", middleName: "", lastName: "", email: "", phone: "", gender: "", address: "", nationality: "", language: "", religion: "", emergencyName: "", emergencyRel: "" });
-        setDob(null);
-        // Generate a new session ID for the next form fill
-        sessionIdRef.current = generateSessionId();
-      }, 3000);
     } catch (error) {
       console.error(error);
       setStatus("idle");
     }
   };
+
+  const resetForm = () => {
+    setStatus("idle");
+    setFormData({ firstName: "", middleName: "", lastName: "", email: "", phone: "", gender: "", address: "", nationality: "", language: "", religion: "", emergencyName: "", emergencyRel: "" });
+    setDob(null);
+    setErrors({});
+    sessionIdRef.current = generateSessionId();
+  };
+
+  if (status === "success") {
+    return (
+      <div className="min-h-screen bg-brand-50 py-12 px-4 sm:px-6 lg:px-8 font-sans flex items-center justify-center">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 sm:p-12">
+            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+            </div>
+            <h1 className="text-2xl font-bold text-brand-900 mb-3">Registration Submitted!</h1>
+            <p className="text-gray-600 mb-8 leading-relaxed">
+              Thank you, <span className="font-semibold text-brand-700">{formData.firstName} {formData.lastName}</span>. Your registration has been successfully submitted and is now being reviewed by our staff.
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={resetForm}
+                className="w-full inline-flex justify-center rounded-lg bg-brand-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-all"
+              >
+                Submit Another Form
+              </button>
+              <Link
+                href="/"
+                className="w-full inline-flex justify-center rounded-lg bg-white border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition-all"
+              >
+                Go Back to Home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-brand-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
@@ -398,14 +431,9 @@ export default function PatientForm() {
             </div>
 
             <div className="pt-2 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 sm:gap-4">
-              {status === "success" && (
-                <span className="flex items-center text-green-600 text-sm font-medium animate-in fade-in slide-in-from-right-4">
-                  <CheckCircle2 className="w-4 h-4 mr-1" />
-                  Successfully submitted
-                </span>
-              )}
               <button
                 type="button"
+                onClick={resetForm}
                 className="px-6 py-3 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors text-center"
               >
                 Clear Form
