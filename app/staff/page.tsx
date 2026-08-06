@@ -25,7 +25,7 @@ type Patient = {
   id: string;
   name: string;
   status: string;
-  lastUpdated: string;
+  lastUpdated: number; // timestamp in ms
   progress: string;
   details?: PatientDetails;
 };
@@ -34,12 +34,34 @@ export default function StaffView() {
   const [activeTab, setActiveTab] = useState("all");
   const [patients, setPatients] = useState<Patient[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [, setTick] = useState(0); // force re-render for relative times
+
+  // Tick every 10 seconds to update relative timestamps
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTimeAgo = (timestamp: number) => {
+    const diff = Math.floor((Date.now() - timestamp) / 1000);
+    if (diff < 5) return 'Just now';
+    if (diff < 60) return `${diff}s ago`;
+    const mins = Math.floor(diff / 60);
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    return new Date(timestamp).toLocaleDateString();
+  };
 
   useEffect(() => {
     const pusher = getPusherClient();
     if (!pusher) return;
 
     const channel = pusher.subscribe('patient-updates');
+
+    // Track inactivity timers per session
+    const inactivityTimers: Record<string, NodeJS.Timeout> = {};
+    const INACTIVITY_TIMEOUT = 30000; // 30 seconds
 
     const calculateProgress = (details?: PatientDetails) => {
       if (!details) return "0%";
@@ -53,22 +75,38 @@ export default function StaffView() {
       return `${Math.round((filled / requiredFields.length) * 100)}%`;
     };
 
-    // Handle typing events (someone actively filling out the form)
-    channel.bind('typing', (data: { name: string, details?: PatientDetails }) => {
+    const markInactive = (sessionId: string) => {
+      setPatients(prev => prev.map(p => 
+        p.id === sessionId && p.status === 'Actively filling'
+          ? { ...p, status: 'Inactive', lastUpdated: Date.now() }
+          : p
+      ));
+    };
+
+    const resetInactivityTimer = (sessionId: string) => {
+      if (inactivityTimers[sessionId]) clearTimeout(inactivityTimers[sessionId]);
+      inactivityTimers[sessionId] = setTimeout(() => markInactive(sessionId), INACTIVITY_TIMEOUT);
+    };
+
+    // Handle typing events
+    channel.bind('typing', (data: { sessionId: string, name: string, details?: PatientDetails }) => {
+      const currentProgress = calculateProgress(data.details);
+      resetInactivityTimer(data.sessionId);
+      
       setPatients(prev => {
-        // If we don't have this typing user, create a temporary entry for them
-        // In a real app we'd need a stable ID for the typing session, but we'll mock it
-        const exists = prev.find(p => p.status === 'Actively filling');
-        const currentProgress = calculateProgress(data.details);
+        const exists = prev.find(p => p.id === data.sessionId);
         
         if (exists) {
-          return prev.map(p => p.id === exists.id ? { ...p, name: data.name, lastUpdated: 'Just now', details: data.details, progress: currentProgress } : p);
+          return prev.map(p => p.id === data.sessionId 
+            ? { ...p, name: data.name, status: 'Actively filling', lastUpdated: Date.now(), details: data.details, progress: currentProgress } 
+            : p
+          );
         } else {
           return [{
-            id: `P-T${Math.floor(100 + Math.random() * 900)}`,
+            id: data.sessionId,
             name: data.name,
             status: "Actively filling",
-            lastUpdated: "Just now",
+            lastUpdated: Date.now(),
             progress: currentProgress,
             details: data.details
           }, ...prev];
@@ -77,22 +115,64 @@ export default function StaffView() {
     });
 
     // Handle submitted events
-    channel.bind('submitted', (data: { id: string, name: string, timestamp: string, details?: PatientDetails }) => {
+    channel.bind('submitted', (data: { sessionId: string, id: string, name: string, timestamp: string, details?: PatientDetails }) => {
+      // Clear inactivity timer for this session
+      if (inactivityTimers[data.sessionId]) {
+        clearTimeout(inactivityTimers[data.sessionId]);
+        delete inactivityTimers[data.sessionId];
+      }
+      
       setPatients(prev => {
-        // Remove any active filling mock and add the submitted one
-        const filtered = prev.filter(p => p.status !== 'Actively filling');
-        return [{
-          id: data.id,
-          name: data.name,
-          status: "Submitted",
-          lastUpdated: "Just now",
-          progress: "100%",
-          details: data.details
-        }, ...filtered];
+        // Replace the active session entry with the submitted one
+        const exists = prev.find(p => p.id === data.sessionId);
+        if (exists) {
+          return prev.map(p => p.id === data.sessionId 
+            ? { ...p, id: data.id, name: data.name, status: 'Submitted', lastUpdated: Date.now(), progress: '100%', details: data.details }
+            : p
+          );
+        } else {
+          return [{
+            id: data.id,
+            name: data.name,
+            status: "Submitted",
+            lastUpdated: Date.now(),
+            progress: "100%",
+            details: data.details
+          }, ...prev];
+        }
+      });
+    });
+
+    // Handle abandoned events (patient closed the page)
+    channel.bind('abandoned', (data: { sessionId: string, name: string, details?: PatientDetails }) => {
+      if (inactivityTimers[data.sessionId]) {
+        clearTimeout(inactivityTimers[data.sessionId]);
+        delete inactivityTimers[data.sessionId];
+      }
+
+      setPatients(prev => {
+        const exists = prev.find(p => p.id === data.sessionId);
+        if (exists) {
+          return prev.map(p => p.id === data.sessionId 
+            ? { ...p, name: data.name, status: 'Inactive', lastUpdated: Date.now(), details: data.details }
+            : p
+          );
+        } else {
+          return [{
+            id: data.sessionId,
+            name: data.name || "Unknown",
+            status: "Inactive",
+            lastUpdated: Date.now(),
+            progress: calculateProgress(data.details),
+            details: data.details
+          }, ...prev];
+        }
       });
     });
 
     return () => {
+      // Clean up all inactivity timers
+      Object.values(inactivityTimers).forEach(timer => clearTimeout(timer));
       channel.unbind_all();
       channel.unsubscribe();
     };
@@ -261,7 +341,7 @@ export default function StaffView() {
                           <span className="text-xs text-gray-500 font-medium">{patient.progress}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-gray-500">{patient.lastUpdated}</td>
+                      <td className="px-6 py-4 text-gray-500">{formatTimeAgo(patient.lastUpdated)}</td>
                       <td className="px-6 py-4 text-right">
                         <button 
                           onClick={() => setSelectedPatient(patient)}

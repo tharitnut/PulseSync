@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { CheckCircle2, User, Phone, MapPin, Globe, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
+// Generate a unique session ID for this form instance
+const generateSessionId = () => `S-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
 export default function PatientForm() {
   const [dob, setDob] = useState<Date | null>(null);
@@ -15,8 +18,49 @@ export default function PatientForm() {
   
   // Ref for debouncing typing events
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Stable session ID for this form instance
+  const sessionIdRef = useRef<string>(generateSessionId());
   
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Send abandoned event when leaving the page with an unfinished form
+  const sendAbandonedEvent = useCallback(() => {
+    const hasData = formData.firstName || formData.lastName || formData.email || formData.phone;
+    if (!hasData) return; // Don't send if form is completely empty
+    
+    const payload = JSON.stringify({
+      event: 'abandoned',
+      data: {
+        sessionId: sessionIdRef.current,
+        name: formData.firstName ? `${formData.firstName} ${formData.lastName}`.trim() : "Unknown",
+        details: { ...formData, dob: dob ? dob.toISOString() : null }
+      }
+    });
+
+    // Use sendBeacon for reliability on page close
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/pusher', payload);
+    } else {
+      fetch('/api/pusher', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+        keepalive: true
+      }).catch(() => {});
+    }
+  }, [formData, dob]);
+
+  // Register beforeunload handler
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (status !== 'success') {
+        sendAbandonedEvent();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [sendAbandonedEvent, status]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -52,6 +96,7 @@ export default function PatientForm() {
         body: JSON.stringify({
           event: 'typing',
           data: { 
+            sessionId: sessionIdRef.current,
             name: formData.firstName ? `${formData.firstName} ${formData.lastName}`.trim() : "",
             details: { ...formData, dob: dob ? dob.toISOString() : null }
           }
@@ -81,6 +126,7 @@ export default function PatientForm() {
         body: JSON.stringify({
           event: 'submitted',
           data: {
+            sessionId: sessionIdRef.current,
             id: `P-${Math.floor(1000 + Math.random() * 9000)}`,
             name: `${formData.firstName} ${formData.lastName}`.trim(),
             timestamp: new Date().toISOString(),
@@ -94,6 +140,8 @@ export default function PatientForm() {
         setStatus("idle");
         setFormData({ firstName: "", middleName: "", lastName: "", email: "", phone: "", gender: "", address: "", nationality: "", language: "", religion: "", emergencyName: "", emergencyRel: "" });
         setDob(null);
+        // Generate a new session ID for the next form fill
+        sessionIdRef.current = generateSessionId();
       }, 3000);
     } catch (error) {
       console.error(error);

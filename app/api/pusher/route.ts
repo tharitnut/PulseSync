@@ -3,7 +3,16 @@ import { pusherServer } from '@/lib/pusher';
 
 export async function POST(req: Request) {
   try {
-    const { event, data } = await req.json();
+    // sendBeacon sends as text/plain, so handle both content types
+    const contentType = req.headers.get('content-type') || '';
+    let body;
+    if (contentType.includes('application/json')) {
+      body = await req.json();
+    } else {
+      const text = await req.text();
+      body = JSON.parse(text);
+    }
+    const { event, data } = body;
 
     if (!event || !data) {
       return NextResponse.json({ error: 'Missing event or data' }, { status: 400 });
