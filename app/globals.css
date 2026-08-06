@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc; /* Lighter, cooler background */
+  --foreground: #0f172a;
 }
 
 @theme {
@@ -11,25 +11,101 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  --color-brand-50: #f0f7ff;
-  --color-brand-500: #0284c7;
-  --color-brand-700: #0369a1;
-  --color-brand-900: #0c4a6e;
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-900: #1e3a8a;
   
   --color-status-active: #f59e0b;
   --color-status-submitted: #10b981;
-  --color-status-inactive: #9ca3af;
+  --color-status-inactive: #94a3b8;
+
+  --animate-modal-up: modal-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in: fade-in 0.3s ease-out forwards;
+  --animate-pop: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  
+  @keyframes modal-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes pop {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 } 
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f172a;
+    --foreground: #f8fafc;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Glassmorphism Utility */
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-sm;
+  }
+  .glass-dark {
+    @apply bg-slate-900/70 backdrop-blur-md border border-slate-700/50 shadow-sm;
+  }
+  
+  /* A nice subtle mesh background for the whole page */
+  .bg-mesh {
+    background-color: var(--background);
+    background-image: 
+      radial-gradient(at 40% 20%, hsla(210,100%,93%,1) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(189,100%,93%,1) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(230,100%,95%,1) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(280,100%,96%,1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(220,100%,94%,1) 0px, transparent 50%),
+      radial-gradient(at 80% 100%, hsla(240,100%,95%,1) 0px, transparent 50%),
+      radial-gradient(at 0% 0%, hsla(210,100%,96%,1) 0px, transparent 50%);
+  }
+
+  /* Custom Select with Spaced Arrow */
+  .custom-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 1rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25rem 1.25rem;
+    padding-right: 2.5rem;
+  }
 }

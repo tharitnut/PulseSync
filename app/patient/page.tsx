@@ -152,26 +152,30 @@ export default function PatientForm() {
 
   if (status === "success") {
     return (
-      <div className="min-h-screen bg-brand-50 py-12 px-4 sm:px-6 lg:px-8 font-sans flex items-center justify-center">
-        <div className="max-w-md w-full text-center">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 sm:p-12">
-            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+      <div className="min-h-screen bg-mesh py-12 px-4 sm:px-6 lg:px-8 font-sans flex items-center justify-center relative overflow-hidden">
+        {/* Decorative blobs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-400/20 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-400/20 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="max-w-md w-full text-center relative z-10">
+          <div className="glass rounded-3xl p-8 sm:p-12 animate-fade-in shadow-xl">
+            <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-pop shadow-inner border border-emerald-200">
+              <CheckCircle2 className="w-12 h-12 text-emerald-600" />
             </div>
-            <h1 className="text-2xl font-bold text-brand-900 mb-3">Registration Submitted!</h1>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              Thank you, <span className="font-semibold text-brand-700">{formData.firstName} {formData.lastName}</span>. Your registration has been successfully submitted and is now being reviewed by our staff.
+            <h1 className="text-3xl font-bold text-brand-900 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">Registration Submitted!</h1>
+            <p className="text-slate-600 mb-8 leading-relaxed text-lg">
+              Thank you, <span className="font-semibold text-brand-800">{formData.firstName} {formData.lastName}</span>. Your registration has been successfully submitted and is now being reviewed by our staff.
             </p>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               <button
                 onClick={resetForm}
-                className="w-full inline-flex justify-center rounded-lg bg-brand-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-all"
+                className="w-full inline-flex justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 text-base font-semibold text-white shadow-md hover:shadow-lg hover:from-emerald-600 hover:to-teal-600 hover:-translate-y-0.5 transition-all"
               >
                 Submit Another Form
               </button>
               <Link
                 href="/"
-                className="w-full inline-flex justify-center rounded-lg bg-white border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition-all"
+                className="w-full inline-flex justify-center rounded-xl bg-white/50 backdrop-blur-sm border border-slate-200 px-6 py-4 text-base font-semibold text-slate-700 shadow-sm hover:bg-white/80 hover:shadow transition-all"
               >
                 Go Back to Home
               </Link>
@@ -183,20 +187,24 @@ export default function PatientForm() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-mesh py-12 px-4 sm:px-6 lg:px-8 font-sans relative overflow-hidden">
+      {/* Decorative blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-400/20 rounded-full blur-[100px] pointer-events-none" />
+      
+      <div className="max-w-3xl mx-auto relative z-10 animate-fade-in">
         <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-brand-900 tracking-tight">Patient Registration</h1>
-            <p className="mt-2 text-sm text-gray-600">Please fill out your information carefully.</p>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600 tracking-tight pb-1">Patient Registration</h1>
+            <p className="mt-2 text-base text-slate-600 font-medium">Please fill out your information carefully.</p>
           </div>
-          <Link href="/" className="self-start sm:self-auto text-sm font-medium text-brand-500 hover:text-brand-500 bg-brand-50 px-4 py-2 rounded-full transition-colors shrink-0">
+          <Link href="/" className="self-start sm:self-auto text-sm font-semibold text-brand-600 hover:text-brand-700 bg-white/50 backdrop-blur-md border border-white/60 shadow-sm px-5 py-2.5 rounded-full hover:shadow transition-all shrink-0">
             &larr; Back to Home
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-8">
+        <div className="glass rounded-3xl shadow-xl overflow-hidden">
+          <form onSubmit={handleSubmit} className="p-6 sm:p-10 space-y-10">
             
             {/* Personal Information */}
             <div>
@@ -211,7 +219,7 @@ export default function PatientForm() {
                   <input
                     type="text"
                     id="firstName"
-                    className={`block w-full rounded-lg border ${errors.firstName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900`}
+                    className={`block w-full rounded-lg border ${errors.firstName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
                     placeholder="John"
                     value={formData.firstName}
                     onChange={(e) => {
@@ -227,7 +235,7 @@ export default function PatientForm() {
                   <input
                     type="text"
                     id="middleName"
-                    className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 shadow-sm focus:border-brand-500 focus:ring-brand-500 sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900"
+                    className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 shadow-sm focus:border-brand-500 focus:ring-brand-500 sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900"
                     placeholder="William"
                     value={formData.middleName}
                     onChange={(e) => setFormData({...formData, middleName: e.target.value})}
@@ -239,7 +247,7 @@ export default function PatientForm() {
                   <input
                     type="text"
                     id="lastName"
-                    className={`block w-full rounded-lg border ${errors.lastName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900`}
+                    className={`block w-full rounded-lg border ${errors.lastName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
                     placeholder="Doe"
                     value={formData.lastName}
                     onChange={(e) => {
@@ -260,7 +268,7 @@ export default function PatientForm() {
                     }}
                     dateFormat="dd/MM/yyyy"
                     placeholderText="dd/mm/yyyy"
-                    className={`block w-full rounded-lg border ${errors.dob ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900`}
+                    className={`block w-full rounded-lg border ${errors.dob ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
                     wrapperClassName="w-full"
                   />
                   {errors.dob && <p className="mt-1 text-xs text-red-500">{errors.dob}</p>}
@@ -275,7 +283,7 @@ export default function PatientForm() {
                       setFormData({...formData, gender: e.target.value});
                       if (errors.gender) setErrors({...errors, gender: ""});
                     }}
-                    className={`block w-full rounded-lg border ${errors.gender ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white ${formData.gender ? 'text-brand-900' : 'text-gray-400'}`}
+                    className={`custom-select block w-full rounded-lg border ${errors.gender ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm ${formData.gender ? 'text-brand-900' : 'text-gray-400'}`}
                   >
                     <option value="">Select gender</option>
                     <option value="male">Male</option>
@@ -301,7 +309,7 @@ export default function PatientForm() {
                   <input
                     type="tel"
                     id="phone"
-                    className={`block w-full rounded-lg border ${errors.phone ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900`}
+                    className={`block w-full rounded-lg border ${errors.phone ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
                     placeholder="+1 (555) 000-0000"
                     value={formData.phone}
                     onChange={(e) => {
@@ -317,7 +325,7 @@ export default function PatientForm() {
                   <input
                     type="email"
                     id="email"
-                    className={`block w-full rounded-lg border ${errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900`}
+                    className={`block w-full rounded-lg border ${errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
                     placeholder="john@example.com"
                     value={formData.email}
                     onChange={(e) => {
@@ -333,7 +341,7 @@ export default function PatientForm() {
                   <textarea
                     id="address"
                     rows={3}
-                    className={`block w-full rounded-lg border ${errors.address ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900 resize-none`}
+                    className={`block w-full rounded-lg border ${errors.address ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900 resize-none`}
                     value={formData.address}
                     onChange={(e) => {
                       setFormData({...formData, address: e.target.value});
@@ -358,7 +366,7 @@ export default function PatientForm() {
                   <input
                     type="text"
                     id="nationality"
-                    className={`block w-full rounded-lg border ${errors.nationality ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900`}
+                    className={`block w-full rounded-lg border ${errors.nationality ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
                     placeholder="e.g. American"
                     value={formData.nationality}
                     onChange={(e) => {
@@ -374,7 +382,7 @@ export default function PatientForm() {
                   <input
                     type="text"
                     id="language"
-                    className={`block w-full rounded-lg border ${errors.language ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900`}
+                    className={`block w-full rounded-lg border ${errors.language ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
                     placeholder="e.g. English"
                     value={formData.language}
                     onChange={(e) => {
@@ -390,7 +398,7 @@ export default function PatientForm() {
                   <input
                     type="text"
                     id="religion"
-                    className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 shadow-sm focus:border-brand-500 focus:ring-brand-500 sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900"
+                    className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 shadow-sm focus:border-brand-500 focus:ring-brand-500 sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900"
                     value={formData.religion}
                     onChange={(e) => setFormData({...formData, religion: e.target.value})}
                   />
@@ -410,7 +418,7 @@ export default function PatientForm() {
                   <input
                     type="text"
                     id="emergencyName"
-                    className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900"
+                    className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900"
                     placeholder="Jane Doe"
                     value={formData.emergencyName}
                     onChange={(e) => setFormData({...formData, emergencyName: e.target.value})}
@@ -421,8 +429,8 @@ export default function PatientForm() {
                   <input
                     type="text"
                     id="emergencyRel"
-                    className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm transition-colors placeholder:text-gray-400 text-brand-900"
-                    placeholder="Spouse, Sibling, etc."
+                    className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900"
+                    placeholder="e.g. Spouse, Parent"
                     value={formData.emergencyRel}
                     onChange={(e) => setFormData({...formData, emergencyRel: e.target.value})}
                   />
@@ -430,18 +438,18 @@ export default function PatientForm() {
               </div>
             </div>
 
-            <div className="pt-2 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 sm:gap-4">
+            <div className="pt-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 sm:gap-4 border-t border-slate-100/50 mt-10">
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-6 py-3 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors text-center"
+                className="px-6 py-3.5 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors text-center"
               >
                 Clear Form
               </button>
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="inline-flex justify-center rounded-lg bg-brand-500 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="inline-flex justify-center rounded-xl bg-gradient-to-r from-brand-500 to-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-md hover:shadow-lg hover:from-brand-600 hover:to-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {status === "submitting" ? "Submitting..." : "Submit Registration"}
               </button>

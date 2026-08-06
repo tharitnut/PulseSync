@@ -210,20 +210,23 @@ export default function StaffView() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-50 font-sans flex flex-col md:flex-row">
-      
+    <div className="min-h-screen bg-mesh font-sans flex flex-col md:flex-row relative overflow-hidden">
+      {/* Decorative blobs */}
+      <div className="absolute top-[-10%] right-[10%] w-[40%] h-[40%] bg-blue-400/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[20%] left-[-10%] w-[30%] h-[30%] bg-indigo-400/20 rounded-full blur-[100px] pointer-events-none" />
+
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex w-64 flex-col bg-white border-r border-gray-200 h-screen sticky top-0">
-        <div className="h-16 flex items-center px-6 border-b border-gray-200">
-          <Activity className="w-6 h-6 text-brand-500 mr-2" />
-          <span className="text-lg font-bold text-brand-900 tracking-tight">Agnos Staff</span>
+      <aside className="hidden md:flex w-64 flex-col bg-white/70 backdrop-blur-md border-r border-slate-200/50 h-screen sticky top-0 z-20">
+        <div className="h-16 flex items-center px-6 border-b border-slate-200/50">
+          <Activity className="w-6 h-6 text-brand-600 mr-2" />
+          <span className="text-lg font-bold text-slate-800 tracking-tight">Agnos Staff</span>
         </div>
-        <nav className="flex-1 p-4 space-y-1">
-          <a href="#" className="flex items-center px-3 py-2.5 bg-brand-50 text-brand-700 rounded-lg text-sm font-medium transition-colors">
+        <nav className="flex-1 p-4 space-y-2">
+          <a href="#" className="flex items-center px-4 py-3 bg-white/60 shadow-sm border border-brand-100 text-brand-700 rounded-xl text-sm font-semibold transition-all">
             <Users className="w-5 h-5 mr-3" />
             Live Registrations
           </a>
-          <Link href="/" className="flex items-center px-3 py-2.5 text-gray-700 hover:bg-gray-50 rounded-lg text-sm font-medium transition-colors">
+          <Link href="/" className="flex items-center px-4 py-3 text-slate-600 hover:bg-white/40 hover:text-slate-900 rounded-xl text-sm font-medium transition-all">
             <ChevronRight className="w-5 h-5 mr-3 rotate-180" />
             Exit Dashboard
           </Link>
@@ -231,79 +234,79 @@ export default function StaffView() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-10">
+        <header className="h-16 bg-white/50 backdrop-blur-sm border-b border-slate-200/50 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-20">
           <div className="flex items-center gap-2">
-            <Link href="/" className="p-1 -ml-1 text-gray-400 hover:text-gray-600 transition-colors md:hidden">
+            <Link href="/" className="p-2 -ml-2 text-slate-400 hover:text-slate-600 transition-colors md:hidden">
               <ChevronRight className="w-5 h-5 rotate-180" />
             </Link>
             <div className="flex items-center">
-              <Activity className="w-6 h-6 text-brand-500 mr-2 md:hidden" />
-              <span className="text-lg font-bold text-brand-900 tracking-tight md:hidden">Agnos</span>
-              <span className="text-lg font-bold text-gray-900 tracking-tight hidden md:block">Dashboard Overview</span>
+              <Activity className="w-6 h-6 text-brand-600 mr-2 md:hidden" />
+              <span className="text-lg font-bold text-slate-800 tracking-tight md:hidden">Agnos</span>
+              <span className="text-lg font-bold text-slate-800 tracking-tight hidden md:block">Dashboard Overview</span>
             </div>
           </div>
         </header>
 
         {/* Dashboard Content */}
-        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto animate-fade-in">
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-brand-900 tracking-tight">Live Registrations</h1>
-            <p className="mt-1 text-gray-500">Monitor incoming patient data in real-time.</p>
+            <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600 tracking-tight pb-1">Live Registrations</h1>
+            <p className="mt-1 text-slate-600 font-medium">Monitor incoming patient data in real-time.</p>
           </div>
 
           {/* Stats Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+            <div className="glass p-6 rounded-3xl flex items-center justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div>
-                <p className="text-sm font-medium text-gray-500">Active Forms</p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">
+                <p className="text-sm font-medium text-slate-500">Active Forms</p>
+                <p className="text-3xl font-bold text-slate-800 mt-1">
                   {patients.filter(p => p.status === 'Actively filling').length}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-blue-50 text-brand-600 rounded-xl flex items-center justify-center">
-                <Activity className="w-6 h-6" />
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 rounded-2xl flex items-center justify-center shadow-sm">
+                <Activity className="w-7 h-7" />
               </div>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div className="glass p-6 rounded-3xl flex items-center justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div>
-                <p className="text-sm font-medium text-gray-500">Submitted Today</p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">
+                <p className="text-sm font-medium text-slate-500">Submitted Today</p>
+                <p className="text-3xl font-bold text-slate-800 mt-1">
                   {patients.filter(p => p.status === 'Submitted').length}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
-                <FileCheck className="w-6 h-6" />
+              <div className="w-14 h-14 bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center shadow-sm">
+                <FileCheck className="w-7 h-7" />
               </div>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div className="glass p-6 rounded-3xl flex items-center justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div>
-                <p className="text-sm font-medium text-gray-500">Abandoned/Inactive</p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">
+                <p className="text-sm font-medium text-slate-500">Abandoned/Inactive</p>
+                <p className="text-3xl font-bold text-slate-800 mt-1">
                   {patients.filter(p => p.status === 'Inactive').length}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-gray-100 text-gray-600 rounded-xl flex items-center justify-center">
-                <Clock className="w-6 h-6" />
+              <div className="w-14 h-14 bg-gradient-to-br from-slate-100 to-slate-200 text-slate-600 rounded-2xl flex items-center justify-center shadow-sm">
+                <Clock className="w-7 h-7" />
               </div>
             </div>
           </div>
 
           {/* Table Area */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-              <h2 className="text-base font-semibold text-gray-900">Current Sessions</h2>
-              <div className="flex gap-2 text-sm">
+          <div className="glass rounded-3xl overflow-hidden">
+            <div className="border-b border-slate-200/50 px-6 py-5 flex items-center justify-between bg-white/30">
+              <h2 className="text-lg font-bold text-slate-800">Current Sessions</h2>
+              <div className="flex gap-2 text-sm bg-slate-100/50 p-1 rounded-xl">
                 <button 
                   onClick={() => setActiveTab("all")}
-                  className={`px-3 py-1.5 rounded-md font-medium transition-colors ${activeTab === 'all' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900'}`}
+                  className={`px-4 py-1.5 rounded-lg font-semibold transition-all ${activeTab === 'all' ? 'bg-white shadow-sm text-brand-700' : 'text-slate-500 hover:text-slate-800'}`}
                 >
                   All
                 </button>
                 <button 
                   onClick={() => setActiveTab("active")}
-                  className={`px-3 py-1.5 rounded-md font-medium transition-colors ${activeTab === 'active' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900'}`}
+                  className={`px-4 py-1.5 rounded-lg font-semibold transition-all ${activeTab === 'active' ? 'bg-white shadow-sm text-brand-700' : 'text-slate-500 hover:text-slate-800'}`}
                 >
                   Active Only
                 </button>
@@ -312,7 +315,7 @@ export default function StaffView() {
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm whitespace-nowrap">
-                <thead className="bg-gray-50/50 text-gray-500 font-medium">
+                <thead className="bg-slate-50/50 text-slate-500 font-semibold border-b border-slate-200/50">
                   <tr>
                     <th className="px-6 py-4">Patient ID</th>
                     <th className="px-6 py-4">Name</th>
@@ -322,30 +325,30 @@ export default function StaffView() {
                     <th className="px-6 py-4 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-slate-100/50">
                   {patients.filter(p => activeTab === 'all' || p.status === 'Actively filling').map((patient) => (
-                    <tr key={patient.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-gray-900">{patient.id}</td>
-                      <td className="px-6 py-4 text-gray-700">{patient.name || <span className="text-gray-400 italic">Typing...</span>}</td>
+                    <tr key={patient.id} className="hover:bg-white/60 transition-colors group">
+                      <td className="px-6 py-4 font-semibold text-slate-700">{patient.id}</td>
+                      <td className="px-6 py-4 text-slate-600">{patient.name || <span className="text-slate-400 italic font-medium">Typing...</span>}</td>
                       <td className="px-6 py-4">
                         {getStatusBadge(patient.status)}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="w-16 h-1.5 bg-slate-200/70 rounded-full overflow-hidden shadow-inner">
                             <div 
-                              className={`h-full rounded-full ${patient.status === 'Submitted' ? 'bg-emerald-500' : patient.status === 'Actively filling' ? 'bg-blue-500' : 'bg-gray-300'}`} 
+                              className={`h-full rounded-full transition-all duration-500 ${patient.status === 'Submitted' ? 'bg-gradient-to-r from-emerald-400 to-emerald-500' : patient.status === 'Actively filling' ? 'bg-gradient-to-r from-brand-400 to-brand-500' : 'bg-slate-400'}`} 
                               style={{ width: patient.progress }}
                             ></div>
                           </div>
-                          <span className="text-xs text-gray-500 font-medium">{patient.progress}</span>
+                          <span className="text-xs text-slate-500 font-semibold">{patient.progress}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-gray-500">{formatTimeAgo(patient.lastUpdated)}</td>
+                      <td className="px-6 py-4 text-slate-500 font-medium">{formatTimeAgo(patient.lastUpdated)}</td>
                       <td className="px-6 py-4 text-right">
                         <button 
                           onClick={() => setSelectedPatient(patient)}
-                          className="text-brand-500 font-medium hover:text-brand-700 hover:underline transition-colors"
+                          className="text-brand-600 font-semibold hover:text-brand-700 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
                         >
                           View details
                         </button>
@@ -369,84 +372,89 @@ export default function StaffView() {
         </div>
       </main>
 
-      {/* Patient Details Modal */}
+      {/* Modal Overlay */}
       {selectedPatient && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95">
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white">
-              <h2 className="text-lg font-semibold text-gray-900">Patient Details: <span className="text-brand-600">{selectedPatient.id}</span></h2>
-              <button onClick={() => setSelectedPatient(null)} className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-100 rounded-full">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+          <div className="glass rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-modal-up border-slate-200/50">
+            {/* Modal Header */}
+            <div className="px-6 py-5 border-b border-slate-200/50 flex items-center justify-between bg-white/50">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">Patient Details</h3>
+                <p className="text-sm text-slate-500 font-medium mt-1">ID: {selectedPatient.id}</p>
+              </div>
+              <button 
+                onClick={() => setSelectedPatient(null)}
+                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 overflow-y-auto max-h-[70vh]">
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto">
               {!selectedPatient.details ? (
                 <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FileCheck className="w-6 h-6 text-gray-400" />
-                  </div>
-                  <h3 className="text-sm font-medium text-gray-900">No details provided yet</h3>
-                  <p className="mt-1 text-sm text-gray-500">This user hasn't filled out any fields.</p>
+                  <p className="text-slate-500 font-medium">No details available yet.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">First Name</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.firstName || '-'}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">First Name</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.firstName || '-'}</p>
                   </div>
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Middle Name</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.middleName || '-'}</p>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Middle Name</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.middleName || '-'}</p>
                   </div>
                   
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Last Name</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.lastName || '-'}</p>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Last Name</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.lastName || '-'}</p>
                   </div>
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Date of Birth</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.dob ? new Date(selectedPatient.details.dob).toLocaleDateString() : '-'}</p>
-                  </div>
-
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Gender</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.gender || '-'}</p>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Nationality</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.nationality || '-'}</p>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Date of Birth</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.dob ? new Date(selectedPatient.details.dob).toLocaleDateString() : '-'}</p>
                   </div>
 
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Preferred Language</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.language || '-'}</p>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Gender</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.gender || '-'}</p>
                   </div>
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Religion</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.religion || '-'}</p>
-                  </div>
-
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Phone Number</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.phone || '-'}</p>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Email Address</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.email || '-'}</p>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nationality</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.nationality || '-'}</p>
                   </div>
 
-                  <div className="sm:col-span-2 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Address</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.address || '-'}</p>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Preferred Language</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.language || '-'}</p>
+                  </div>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Religion</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.religion || '-'}</p>
                   </div>
 
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Contact Name</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.emergencyName || '-'}</p>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Phone Number</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.phone || '-'}</p>
                   </div>
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Relationship</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedPatient.details.emergencyRel || '-'}</p>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.email || '-'}</p>
+                  </div>
+
+                  <div className="sm:col-span-2 bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Address</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.address || '-'}</p>
+                  </div>
+
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Contact Name</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.emergencyName || '-'}</p>
+                  </div>
+                  <div className="bg-white/60 p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow transition-shadow">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Relationship</p>
+                    <p className="text-sm font-bold text-slate-800">{selectedPatient.details.emergencyRel || '-'}</p>
                   </div>
                 </div>
               )}
