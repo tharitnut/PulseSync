@@ -1,40 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Agnos Healthcare System (Patient-Staff Portal)
+
+A modern, real-time web application built with Next.js that facilitates patient registration and provides a live monitoring dashboard for healthcare staff.
+
+## Features
+
+### 🏥 For Patients
+- **Responsive Registration Form:** A clean, mobile-friendly interface for inputting personal details, contact information, and medical demographics.
+- **Real-Time Sync:** As the patient types, their progress is instantly synced to the staff dashboard.
+- **Form Validation:** Real-time feedback for required fields.
+
+### 👩‍⚕️ For Staff
+- **Live Monitoring Dashboard:** Watch patient registrations come in real-time without refreshing the page.
+- **Dynamic Progress Tracking:** See exactly what percentage of a form a patient has completed in real-time.
+- **Patient Details Modal:** Click on any active or submitted registration to view a detailed, neatly organized grid of the patient's information (First/Middle/Last Name, DOB, Contact Info, Emergency Contacts, etc.).
+
+## Tech Stack
+- **Framework:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS
+- **Real-Time WebSockets:** Pusher
+- **Icons:** Lucide React
+- **Date Picker:** react-datepicker
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+You will need a Pusher account and credentials. Create a `.env.local` file in the root directory and add the following keys:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```env
+NEXT_PUBLIC_PUSHER_APP_KEY=your_app_key
+NEXT_PUBLIC_PUSHER_CLUSTER=your_cluster
+PUSHER_APP_ID=your_app_id
+PUSHER_SECRET=your_secret
 ```
+*(See `.env.example` for a template).*
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+3. Open two browser windows to see the real-time functionality:
+   - Patient view: [http://localhost:3000/patient](http://localhost:3000/patient)
+   - Staff view: [http://localhost:3000/staff](http://localhost:3000/staff)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
+- `app/patient/page.tsx`: The client-facing registration form that broadcasts typing and submission events.
+- `app/staff/page.tsx`: The staff dashboard that subscribes to Pusher channels to monitor patient activity.
+- `app/api/pusher/route.ts`: Serverless API route to securely trigger Pusher events.
+- `lib/pusher.ts`: Singleton configurations for the Pusher client and server.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-# Agnos Candidate Assignment
-
-# Patient Staff System
+## Real-Time Architecture
+When a patient types in any input field, a debounced API call is sent to `/api/pusher`, which triggers a `typing` event over WebSockets containing the patient's current form state. The staff dashboard listens for this event and dynamically updates the table and progress bars. When the form is submitted, a `submitted` event finalizes the record.
