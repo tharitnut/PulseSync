@@ -2,6 +2,13 @@
 
 A modern, real-time web application built with Next.js that facilitates patient registration and provides a live monitoring dashboard for healthcare staff.
 
+## 🚀 Live Demo
+- **Home Page / Landing:** [https://agnos-candidate-assignment-patient.vercel.app/](https://agnos-candidate-assignment-patient.vercel.app/)
+- **Patient Registration Form:** [https://agnos-candidate-assignment-patient.vercel.app/patient](https://agnos-candidate-assignment-patient.vercel.app/patient)
+- **Staff Monitoring Dashboard:** [https://agnos-candidate-assignment-patient.vercel.app/staff](https://agnos-candidate-assignment-patient.vercel.app/staff)
+
+*(Open both links in separate windows to see the real-time synchronization in action!)*
+
 ## Features
 
 ### 🏥 For Patients
