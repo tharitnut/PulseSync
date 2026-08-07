@@ -24,7 +24,7 @@ const genderOptions = [
 ];
 
 // Generate a unique session ID for this form instance
-const generateSessionId = () => `S-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+const generateSessionId = () => `P-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
 export default function PatientForm() {
   const [dob, setDob] = useState<Date | null>(null);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Activity, Clock, FileCheck, Search, Bell, Users, ChevronRight, X } from "lucide-react";
+import { Activity, Clock, FileCheck, Search, Bell, Users, ChevronRight, X, XCircle } from "lucide-react";
 import Link from "next/link";
 import { getPusherClient } from "@/lib/pusher";
 
@@ -63,6 +63,9 @@ export default function StaffView() {
     const inactivityTimers: Record<string, NodeJS.Timeout> = {};
     const INACTIVITY_TIMEOUT = 30000; // 30 seconds
 
+    const abandonmentTimers: Record<string, NodeJS.Timeout> = {};
+    const ABANDONMENT_TIMEOUT = 300000; // 5 minutes
+
     const calculateProgress = (details?: PatientDetails) => {
       if (!details) return "0%";
       const requiredFields: (keyof PatientDetails)[] = ['firstName', 'lastName', 'dob', 'gender', 'phone', 'email', 'address', 'nationality', 'language'];
@@ -111,9 +114,20 @@ export default function StaffView() {
       ));
     };
 
+    const markAbandoned = (sessionId: string) => {
+      setPatients(prev => prev.map(p => 
+        p.id === sessionId && (p.status === 'Actively filling' || p.status === 'Inactive')
+          ? { ...p, status: 'Abandoned', lastUpdated: Date.now() }
+          : p
+      ));
+    };
+
     const resetInactivityTimer = (sessionId: string) => {
       if (inactivityTimers[sessionId]) clearTimeout(inactivityTimers[sessionId]);
       inactivityTimers[sessionId] = setTimeout(() => markInactive(sessionId), INACTIVITY_TIMEOUT);
+
+      if (abandonmentTimers[sessionId]) clearTimeout(abandonmentTimers[sessionId]);
+      abandonmentTimers[sessionId] = setTimeout(() => markAbandoned(sessionId), ABANDONMENT_TIMEOUT);
     };
 
     // Handle typing events
@@ -144,10 +158,14 @@ export default function StaffView() {
 
     // Handle submitted events
     channel.bind('submitted', (data: { sessionId: string, id: string, name: string, timestamp: string, details?: PatientDetails }) => {
-      // Clear inactivity timer for this session
+      // Clear inactivity timers for this session
       if (inactivityTimers[data.sessionId]) {
         clearTimeout(inactivityTimers[data.sessionId]);
         delete inactivityTimers[data.sessionId];
+      }
+      if (abandonmentTimers[data.sessionId]) {
+        clearTimeout(abandonmentTimers[data.sessionId]);
+        delete abandonmentTimers[data.sessionId];
       }
       
       setPatients(prev => {
@@ -177,19 +195,23 @@ export default function StaffView() {
         clearTimeout(inactivityTimers[data.sessionId]);
         delete inactivityTimers[data.sessionId];
       }
+      if (abandonmentTimers[data.sessionId]) {
+        clearTimeout(abandonmentTimers[data.sessionId]);
+        delete abandonmentTimers[data.sessionId];
+      }
 
       setPatients(prev => {
         const exists = prev.find(p => p.id === data.sessionId);
         if (exists) {
           return prev.map(p => p.id === data.sessionId 
-            ? { ...p, name: data.name, status: 'Inactive', lastUpdated: Date.now(), details: data.details }
+            ? { ...p, name: data.name, status: 'Abandoned', lastUpdated: Date.now(), details: data.details }
             : p
           );
         } else {
           return [{
             id: data.sessionId,
             name: data.name || "Unknown",
-            status: "Inactive",
+            status: "Abandoned",
             lastUpdated: Date.now(),
             progress: calculateProgress(data.details),
             details: data.details
@@ -199,8 +221,9 @@ export default function StaffView() {
     });
 
     return () => {
-      // Clean up all inactivity timers
+      // Clean up all timers
       Object.values(inactivityTimers).forEach(timer => clearTimeout(timer));
+      Object.values(abandonmentTimers).forEach(timer => clearTimeout(timer));
       channel.unbind_all();
       channel.unsubscribe();
     };
@@ -229,6 +252,13 @@ export default function StaffView() {
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-inactive/10 text-status-inactive border border-status-inactive/20 shadow-sm">
             <Clock className="w-3 h-3" />
+            {status}
+          </span>
+        );
+      case "Abandoned":
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-600 border border-red-200 shadow-sm">
+            <XCircle className="w-3 h-3" />
             {status}
           </span>
         );
@@ -312,7 +342,7 @@ export default function StaffView() {
               <div>
                 <p className="text-sm font-medium text-slate-500">Abandoned/Inactive</p>
                 <p className="text-3xl font-bold text-slate-800 mt-1">
-                  {patients.filter(p => p.status === 'Inactive').length}
+                  {patients.filter(p => p.status === 'Inactive' || p.status === 'Abandoned').length}
                 </p>
               </div>
               <div className="w-14 h-14 bg-gradient-to-br from-slate-100 to-slate-200 text-slate-600 rounded-2xl flex items-center justify-center shadow-sm">
