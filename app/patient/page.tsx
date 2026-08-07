@@ -5,6 +5,17 @@ import { CheckCircle2, User, Phone, MapPin, Globe, AlertCircle } from "lucide-re
 import Link from "next/link";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+import ISO6391 from "iso-639-1";
+import Select from "react-select";
+
+countries.registerLocale(enLocale);
+const nationalitiesList = Object.values(countries.getNames("en", { select: "official" })).sort();
+const languagesList = ISO6391.getAllNames().sort();
+
+const nationalityOptions = nationalitiesList.map(n => ({ value: n, label: n }));
+const languageOptions = languagesList.map(l => ({ value: l, label: l }));
 
 // Generate a unique session ID for this form instance
 const generateSessionId = () => `S-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
@@ -272,6 +283,9 @@ export default function PatientForm() {
                     }}
                     dateFormat="dd/MM/yyyy"
                     placeholderText="dd/mm/yyyy"
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
                     className={`block w-full rounded-lg border ${errors.dob ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
                     wrapperClassName="w-full"
                   />
@@ -367,15 +381,42 @@ export default function PatientForm() {
               <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="nationality" className="block text-sm font-medium text-gray-700 mb-1">Nationality <span className="text-red-400 font-normal">*</span></label>
-                  <input
-                    type="text"
-                    id="nationality"
-                    className={`block w-full rounded-lg border ${errors.nationality ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
-                    placeholder="e.g. American"
-                    value={formData.nationality}
-                    onChange={(e) => {
-                      setFormData({...formData, nationality: e.target.value});
+                  <Select
+                    instanceId="nationality-select"
+                    options={nationalityOptions}
+                    placeholder="Select Nationality"
+                    value={nationalityOptions.find(opt => opt.value === formData.nationality) || null}
+                    onChange={(selectedOption) => {
+                      setFormData({...formData, nationality: selectedOption ? selectedOption.value : ""});
                       if (errors.nationality) setErrors({...errors, nationality: ""});
+                    }}
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderRadius: '0.5rem',
+                        padding: '2px',
+                        borderColor: errors.nationality ? '#fca5a5' : state.isFocused ? '#6366f1' : '#e5e7eb',
+                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                        boxShadow: state.isFocused ? '0 0 0 1px #6366f1' : 'none',
+                        '&:hover': {
+                          borderColor: state.isFocused ? '#6366f1' : '#d1d5db'
+                        }
+                      }),
+                      menu: (baseStyles) => ({
+                        ...baseStyles,
+                        borderRadius: '0.5rem',
+                        overflow: 'hidden'
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        color: '#0f172a',
+                        backgroundColor: state.isFocused ? '#e0e7ff' : 'white',
+                        cursor: 'pointer'
+                      }),
+                      singleValue: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#0f172a'
+                      })
                     }}
                   />
                   {errors.nationality && <p className="mt-1 text-xs text-red-500">{errors.nationality}</p>}
@@ -383,15 +424,42 @@ export default function PatientForm() {
 
                 <div>
                   <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-1">Preferred Language <span className="text-red-400 font-normal">*</span></label>
-                  <input
-                    type="text"
-                    id="language"
-                    className={`block w-full rounded-lg border ${errors.language ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm placeholder:text-gray-400 text-brand-900`}
-                    placeholder="e.g. English"
-                    value={formData.language}
-                    onChange={(e) => {
-                      setFormData({...formData, language: e.target.value});
+                  <Select
+                    instanceId="language-select"
+                    options={languageOptions}
+                    placeholder="Select Preferred Language"
+                    value={languageOptions.find(opt => opt.value === formData.language) || null}
+                    onChange={(selectedOption) => {
+                      setFormData({...formData, language: selectedOption ? selectedOption.value : ""});
                       if (errors.language) setErrors({...errors, language: ""});
+                    }}
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderRadius: '0.5rem',
+                        padding: '2px',
+                        borderColor: errors.language ? '#fca5a5' : state.isFocused ? '#6366f1' : '#e5e7eb',
+                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                        boxShadow: state.isFocused ? '0 0 0 1px #6366f1' : 'none',
+                        '&:hover': {
+                          borderColor: state.isFocused ? '#6366f1' : '#d1d5db'
+                        }
+                      }),
+                      menu: (baseStyles) => ({
+                        ...baseStyles,
+                        borderRadius: '0.5rem',
+                        overflow: 'hidden'
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        color: '#0f172a',
+                        backgroundColor: state.isFocused ? '#e0e7ff' : 'white',
+                        cursor: 'pointer'
+                      }),
+                      singleValue: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#0f172a'
+                      })
                     }}
                   />
                   {errors.language && <p className="mt-1 text-xs text-red-500">{errors.language}</p>}
