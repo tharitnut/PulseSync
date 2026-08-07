@@ -19,7 +19,7 @@ A modern, real-time web application built with Next.js that facilitates patient 
 ### 👩‍⚕️ For Staff
 - **Live Monitoring Dashboard:** Watch patient registrations come in real-time without refreshing the page.
 - **Dynamic Progress Tracking:** See exactly what percentage of a form a patient has completed in real-time.
-- **Abandoned / Inactive Detection:** Identifies when a patient abandons the form (e.g., closing the tab) or goes inactive for more than 30 seconds, automatically flagging their session.
+- **Abandoned / Inactive Detection:** Identifies when a patient abandons the form (e.g., closing the tab) or goes inactive. A 30-second timeout flags them as "Inactive", and a 5-minute timeout permanently flags them as "Abandoned" with clear visual separation.
 - **Patient Details Modal:** Click on any active or submitted registration to view a detailed, neatly organized grid of the patient's information with sleek slide-up animations.
 
 ## Tech Stack
@@ -27,7 +27,7 @@ A modern, real-time web application built with Next.js that facilitates patient 
 - **Styling:** Tailwind CSS (Custom glassmorphism utilities & CSS variables)
 - **Real-Time WebSockets:** Pusher
 - **Icons:** Lucide React
-- **Date Picker:** react-datepicker
+- **Forms & Data:** react-datepicker, react-select, i18n-iso-countries, iso-639-1
 
 ## Getting Started
 
@@ -58,21 +58,26 @@ PUSHER_SECRET=your_secret
 ## Project Structure
 
 ```text
-.
 ├── app/
 │   ├── api/
+│   │   ├── patients/
+│   │   │   └── route.ts       # GET route for the staff dashboard to fetch initial history
 │   │   └── pusher/
-│   │       └── route.ts       # API route to securely trigger Pusher events (handles JSON & plain text beacons)
+│   │       └── route.ts       # POST route to handle real-time WebSockets and store history
 │   ├── patient/
-│   │   └── page.tsx           # Patient registration form (broadcasts events & heartbeats)
-│   └── staff/
-│       └── page.tsx           # Staff dashboard (listens to events & manages inactivity timeouts)
-└── lib/
-    └── pusher.ts              # Configurations for Pusher client and server
+│   │   └── page.tsx           # Client-side form where patients input their information
+│   ├── staff/
+│   │   └── page.tsx           # Client-side dashboard where staff monitor live incoming data
+│   ├── layout.tsx             # Global HTML layout and metadata
+│   └── globals.css            # Tailwind CSS configuration and custom glassmorphism variables
+├── lib/
+│   ├── pusher.ts              # Initialization configuration for Pusher (Server & Client)
+│   └── store.ts               # In-memory global store to save patient sessions across reloads
+└── public/                    # Static assets
 ```
 
 ## Real-Time Architecture & Tracking
 1. **Live Sync:** When a patient types in any input field, a debounced API call is sent to `/api/pusher`, which triggers a `typing` event over WebSockets containing the patient's current form state. 
-2. **Heartbeat & Abandonment:** A unique `sessionId` tracks each form instance. A background heartbeat pings the server every 10 seconds. If the staff dashboard does not receive an update for 30 seconds, the session is marked as "Inactive/Abandoned". 
+2. **Heartbeat & Abandonment:** A unique `sessionId` tracks each form instance. A background heartbeat pings the server every 10 seconds. If the staff dashboard does not receive an update for 30 seconds, the session is marked as "Inactive". After 5 minutes of total silence, it escalates to "Abandoned".
 3. **Tab Closure:** If the user closes the tab before finishing, a `navigator.sendBeacon()` request reliably fires an "abandoned" event before the page unloads, instantly updating the staff dashboard.
 4. **Completion:** When the form is submitted, a `submitted` event finalizes the record and the patient is greeted with an animated success screen.
