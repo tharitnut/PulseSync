@@ -75,6 +75,34 @@ export default function StaffView() {
       return `${Math.round((filled / requiredFields.length) * 100)}%`;
     };
 
+    // Load historical data
+    fetch('/api/patients')
+      .then(res => res.json())
+      .then(data => {
+        if (data.patients && Array.isArray(data.patients)) {
+          const historicalPatients: Patient[] = data.patients.map((p: any) => ({
+            id: p.sessionId,
+            name: p.name || 'Anonymous Patient',
+            status: p.status === 'submitted' ? 'Submitted' : p.status === 'abandoned' ? 'Abandoned' : 'Inactive',
+            lastUpdated: new Date(p.timestamp).getTime(),
+            progress: calculateProgress(p.details),
+            details: p.details
+          }));
+          
+          setPatients(prev => {
+             const merged = [...prev];
+             historicalPatients.forEach(hp => {
+                if (!merged.find(p => p.id === hp.id)) {
+                   merged.push(hp);
+                }
+             });
+             // Sort by latest update
+             return merged.sort((a, b) => b.lastUpdated - a.lastUpdated);
+          });
+        }
+      })
+      .catch(err => console.error("Failed to load patient history:", err));
+
     const markInactive = (sessionId: string) => {
       setPatients(prev => prev.map(p => 
         p.id === sessionId && p.status === 'Actively filling'

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { pusherServer } from '@/lib/pusher';
+import { updatePatient } from '@/lib/store';
 
 export async function POST(req: Request) {
   try {
@@ -16,6 +17,17 @@ export async function POST(req: Request) {
 
     if (!event || !data) {
       return NextResponse.json({ error: 'Missing event or data' }, { status: 400 });
+    }
+
+    // Save state to our memory store
+    if (data.sessionId) {
+      updatePatient(data.sessionId, {
+        status: event as 'typing' | 'submitted' | 'abandoned',
+        name: data.name,
+        timestamp: data.timestamp || new Date().toISOString(),
+        details: data.details,
+        id: data.id
+      });
     }
 
     // Broadcast to the 'patient-updates' channel
