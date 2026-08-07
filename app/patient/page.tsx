@@ -148,7 +148,7 @@ export default function PatientForm() {
           event: 'submitted',
           data: {
             sessionId: sessionIdRef.current,
-            id: `P-${Math.floor(1000 + Math.random() * 9000)}`,
+            id: sessionIdRef.current,
             name: `${formData.firstName} ${formData.lastName}`.trim(),
             timestamp: new Date().toISOString(),
             details: { ...formData, dob: dob ? dob.toISOString() : null }
