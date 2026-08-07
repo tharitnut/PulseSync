@@ -83,14 +83,25 @@ export default function StaffView() {
       .then(res => res.json())
       .then(data => {
         if (data.patients && Array.isArray(data.patients)) {
-          const historicalPatients: Patient[] = data.patients.map((p: any) => ({
-            id: p.sessionId,
-            name: p.name || 'Anonymous Patient',
-            status: p.status === 'submitted' ? 'Submitted' : p.status === 'abandoned' ? 'Abandoned' : 'Inactive',
-            lastUpdated: new Date(p.timestamp).getTime(),
-            progress: calculateProgress(p.details),
-            details: p.details
-          }));
+          const historicalPatients: Patient[] = data.patients.map((p: any) => {
+            const lastUpdated = new Date(p.timestamp).getTime();
+            const timeDiff = Date.now() - lastUpdated;
+            let status = p.status === 'submitted' ? 'Submitted' : p.status === 'abandoned' ? 'Abandoned' : 'Actively filling';
+            
+            if (status === 'Actively filling') {
+              if (timeDiff > ABANDONMENT_TIMEOUT) status = 'Abandoned';
+              else if (timeDiff > INACTIVITY_TIMEOUT) status = 'Inactive';
+            }
+
+            return {
+              id: p.sessionId,
+              name: p.name || 'Anonymous Patient',
+              status,
+              lastUpdated,
+              progress: calculateProgress(p.details),
+              details: p.details
+            };
+          });
           
           setPatients(prev => {
              const merged = [...prev];
