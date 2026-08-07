@@ -16,6 +16,12 @@ const languagesList = ISO6391.getAllNames().sort();
 
 const nationalityOptions = nationalitiesList.map(n => ({ value: n, label: n }));
 const languageOptions = languagesList.map(l => ({ value: l, label: l }));
+const genderOptions = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+  { value: "other", label: "Other" },
+  { value: "prefer_not_to_say", label: "Prefer not to say" }
+];
 
 // Generate a unique session ID for this form instance
 const generateSessionId = () => `S-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
@@ -294,21 +300,58 @@ export default function PatientForm() {
 
                 <div className="sm:col-span-3">
                   <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">Gender <span className="text-red-400 font-normal">*</span></label>
-                  <select
-                    id="gender"
-                    value={formData.gender}
-                    onChange={(e) => {
-                      setFormData({...formData, gender: e.target.value});
+                  <Select
+                    instanceId="gender-select"
+                    options={genderOptions}
+                    placeholder="Select gender"
+                    isSearchable={false}
+                    value={genderOptions.find(opt => opt.value === formData.gender) || null}
+                    onChange={(selectedOption) => {
+                      setFormData({...formData, gender: selectedOption ? selectedOption.value : ""});
                       if (errors.gender) setErrors({...errors, gender: ""});
                     }}
-                    className={`custom-select block w-full rounded-lg border ${errors.gender ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-brand-500 focus:border-brand-500'} px-4 py-2.5 shadow-sm sm:text-sm transition-colors bg-white/70 backdrop-blur-sm ${formData.gender ? 'text-brand-900' : 'text-gray-400'}`}
-                  >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                    <option value="prefer_not_to_say">Prefer not to say</option>
-                  </select>
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderRadius: '0.5rem',
+                        minHeight: '42px',
+                        padding: '0 4px',
+                        borderColor: errors.gender ? '#fca5a5' : state.isFocused ? '#6366f1' : '#e5e7eb',
+                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                        boxShadow: state.isFocused ? '0 0 0 1px #6366f1' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                        '&:hover': {
+                          borderColor: state.isFocused ? '#6366f1' : '#d1d5db'
+                        }
+                      }),
+                      menu: (baseStyles) => ({
+                        ...baseStyles,
+                        borderRadius: '0.5rem',
+                        overflow: 'hidden'
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        color: '#0f172a',
+                        backgroundColor: state.isFocused ? '#e0e7ff' : 'white',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem'
+                      }),
+                      singleValue: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#0f172a',
+                        fontSize: '0.875rem'
+                      }),
+                      placeholder: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#9ca3af',
+                        fontSize: '0.875rem'
+                      }),
+                      input: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#0f172a',
+                        fontSize: '0.875rem'
+                      })
+                    }}
+                  />
                   {errors.gender && <p className="mt-1 text-xs text-red-500">{errors.gender}</p>}
                 </div>
               </div>
@@ -394,10 +437,11 @@ export default function PatientForm() {
                       control: (baseStyles, state) => ({
                         ...baseStyles,
                         borderRadius: '0.5rem',
-                        padding: '2px',
+                        minHeight: '42px',
+                        padding: '0 4px',
                         borderColor: errors.nationality ? '#fca5a5' : state.isFocused ? '#6366f1' : '#e5e7eb',
                         backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                        boxShadow: state.isFocused ? '0 0 0 1px #6366f1' : 'none',
+                        boxShadow: state.isFocused ? '0 0 0 1px #6366f1' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                         '&:hover': {
                           borderColor: state.isFocused ? '#6366f1' : '#d1d5db'
                         }
@@ -411,11 +455,23 @@ export default function PatientForm() {
                         ...baseStyles,
                         color: '#0f172a',
                         backgroundColor: state.isFocused ? '#e0e7ff' : 'white',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        fontSize: '0.875rem'
                       }),
                       singleValue: (baseStyles) => ({
                         ...baseStyles,
-                        color: '#0f172a'
+                        color: '#0f172a',
+                        fontSize: '0.875rem'
+                      }),
+                      placeholder: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#9ca3af',
+                        fontSize: '0.875rem'
+                      }),
+                      input: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#0f172a',
+                        fontSize: '0.875rem'
                       })
                     }}
                   />
@@ -437,10 +493,11 @@ export default function PatientForm() {
                       control: (baseStyles, state) => ({
                         ...baseStyles,
                         borderRadius: '0.5rem',
-                        padding: '2px',
+                        minHeight: '42px',
+                        padding: '0 4px',
                         borderColor: errors.language ? '#fca5a5' : state.isFocused ? '#6366f1' : '#e5e7eb',
                         backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                        boxShadow: state.isFocused ? '0 0 0 1px #6366f1' : 'none',
+                        boxShadow: state.isFocused ? '0 0 0 1px #6366f1' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                         '&:hover': {
                           borderColor: state.isFocused ? '#6366f1' : '#d1d5db'
                         }
@@ -454,11 +511,23 @@ export default function PatientForm() {
                         ...baseStyles,
                         color: '#0f172a',
                         backgroundColor: state.isFocused ? '#e0e7ff' : 'white',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        fontSize: '0.875rem'
                       }),
                       singleValue: (baseStyles) => ({
                         ...baseStyles,
-                        color: '#0f172a'
+                        color: '#0f172a',
+                        fontSize: '0.875rem'
+                      }),
+                      placeholder: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#9ca3af',
+                        fontSize: '0.875rem'
+                      }),
+                      input: (baseStyles) => ({
+                        ...baseStyles,
+                        color: '#0f172a',
+                        fontSize: '0.875rem'
                       })
                     }}
                   />
