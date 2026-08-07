@@ -68,7 +68,11 @@ export default function PatientForm() {
     if (!formData.lastName) newErrors.lastName = "Last name is required";
     if (!dob) newErrors.dob = "Date of birth is required";
     if (!formData.gender) newErrors.gender = "Gender is required";
-    if (!formData.phone) newErrors.phone = "Phone number is required";
+    if (!formData.phone) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^\+?[\d\s-()]{7,20}$/.test(formData.phone)) {
+      newErrors.phone = "Invalid phone number";
+    }
     if (!formData.email) {
       newErrors.email = "Email address is required";
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
