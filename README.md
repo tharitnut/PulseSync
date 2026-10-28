@@ -1,8 +1,10 @@
-# Agnos Healthcare System (Patient-Staff Portal)
+# 🏥 PulseSync: Real-Time Patient Intake & Staff Monitoring Portal
 
 [![CI](https://github.com/tharitnut/AgnosCandidateAssignmentPatientStaff/actions/workflows/ci.yml/badge.svg)](https://github.com/tharitnut/AgnosCandidateAssignmentPatientStaff/actions/workflows/ci.yml)
 
-A modern, real-time web application built with Next.js that facilitates patient registration and provides a live monitoring dashboard for healthcare staff.
+> 💡 **Note:** This project was developed as a technical challenge / take-home assignment focusing on real-time data synchronization, session lifecycle management, and robust form validation.
+
+A modern, real-time web application built with Next.js 16 that facilitates patient registration and provides a live monitoring dashboard for healthcare staff.
 
 ## 🚀 Live Demo
 - **Home Page / Landing:** [https://agnos-candidate-assignment-patient.vercel.app/](https://agnos-candidate-assignment-patient.vercel.app/)

@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agnos Healthcare System",
+  title: "PulseSync - Real-Time Patient Intake & Monitoring System",
+  description: "A real-time healthcare web application facilitating patient registration and live staff monitoring.",
 };
 
 export default function RootLayout({

@@ -288,7 +288,7 @@ export default function StaffView() {
       <aside className="hidden md:flex w-64 flex-col bg-white/70 backdrop-blur-md border-r border-slate-200/50 h-screen sticky top-0 z-20">
         <div className="h-16 flex items-center px-6 border-b border-slate-200/50">
           <Activity className="w-6 h-6 text-brand-600 mr-2" />
-          <span className="text-lg font-bold text-slate-800 tracking-tight">Agnos Staff</span>
+          <span className="text-lg font-bold text-slate-800 tracking-tight">PulseSync Staff</span>
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <a href="#" className="flex items-center px-4 py-3 bg-white/60 shadow-sm border border-brand-100 text-brand-700 rounded-xl text-sm font-semibold transition-all">
@@ -312,7 +312,7 @@ export default function StaffView() {
             </Link>
             <div className="flex items-center">
               <Activity className="w-6 h-6 text-brand-600 mr-2 md:hidden" />
-              <span className="text-lg font-bold text-slate-800 tracking-tight md:hidden">Agnos</span>
+              <span className="text-lg font-bold text-slate-800 tracking-tight md:hidden">PulseSync</span>
               <span className="text-lg font-bold text-slate-800 tracking-tight hidden md:block">Dashboard Overview</span>
             </div>
           </div>

@@ -12,7 +12,7 @@ export default function Home() {
         <div className="max-w-2xl w-full text-center space-y-10 animate-fade-in">
           <div className="space-y-4">
             <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600 pb-2">
-              Agnos Healthcare
+              PulseSync Healthcare
             </h1>
             <p className="text-lg text-slate-600 max-w-lg mx-auto font-medium">
               Welcome to the patient registration portal. Please select your role below to continue.
