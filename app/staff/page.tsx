@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Activity, Clock, FileCheck, Search, Bell, Users, ChevronRight, X, XCircle } from "lucide-react";
+import { Activity, Clock, FileCheck, Search, Users, ChevronRight, X, XCircle } from "lucide-react";
 import Link from "next/link";
 import { getPusherClient } from "@/lib/pusher";
 
@@ -34,16 +34,16 @@ export default function StaffView() {
   const [activeTab, setActiveTab] = useState("all");
   const [patients, setPatients] = useState<Patient[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [, setTick] = useState(0); // force re-render for relative times
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
 
   // Tick every 10 seconds to update relative timestamps
   useEffect(() => {
-    const interval = setInterval(() => setTick(t => t + 1), 10000);
+    const interval = setInterval(() => setCurrentTime(Date.now()), 10000);
     return () => clearInterval(interval);
   }, []);
 
   const formatTimeAgo = (timestamp: number) => {
-    const diff = Math.floor((Date.now() - timestamp) / 1000);
+    const diff = Math.floor((currentTime - timestamp) / 1000);
     if (diff < 5) return 'Just now';
     if (diff < 60) return `${diff}s ago`;
     const mins = Math.floor(diff / 60);
@@ -83,7 +83,7 @@ export default function StaffView() {
       .then(res => res.json())
       .then(data => {
         if (data.patients && Array.isArray(data.patients)) {
-          const historicalPatients: Patient[] = data.patients.map((p: any) => {
+          const historicalPatients: Patient[] = data.patients.map((p: { sessionId: string; name?: string; timestamp: string; status?: string; details?: PatientDetails }) => {
             const lastUpdated = new Date(p.timestamp).getTime();
             const timeDiff = Date.now() - lastUpdated;
             let status = p.status === 'submitted' ? 'Submitted' : p.status === 'abandoned' ? 'Abandoned' : 'Actively filling';

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { CheckCircle2, User, Phone, MapPin, Globe, AlertCircle } from "lucide-react";
+import { CheckCircle2, User, Phone, Globe, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -128,7 +128,7 @@ export default function PatientForm() {
     return () => {
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     };
-  }, [formData, dob]);
+  }, [formData, dob, status]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -5,7 +5,7 @@ export type PatientSession = {
   id?: string;
   name: string;
   timestamp: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   status: 'typing' | 'submitted' | 'abandoned';
 };
 
