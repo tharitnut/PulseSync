@@ -1,5 +1,7 @@
 # Agnos Healthcare System (Patient-Staff Portal)
 
+[![CI](https://github.com/tharitnut/AgnosCandidateAssignmentPatientStaff/actions/workflows/ci.yml/badge.svg)](https://github.com/tharitnut/AgnosCandidateAssignmentPatientStaff/actions/workflows/ci.yml)
+
 A modern, real-time web application built with Next.js that facilitates patient registration and provides a live monitoring dashboard for healthcare staff.
 
 ## 🚀 Live Demo
@@ -23,11 +25,12 @@ A modern, real-time web application built with Next.js that facilitates patient 
 - **Patient Details Modal:** Click on any active or submitted registration to view a detailed, neatly organized grid of the patient's information with sleek slide-up animations.
 
 ## Tech Stack
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Styling:** Tailwind CSS (Custom glassmorphism utilities & CSS variables)
 - **Real-Time WebSockets:** Pusher
 - **Icons:** Lucide React
 - **Forms & Data:** react-datepicker, react-select, i18n-iso-countries, iso-639-1
+- **CI / Quality:** GitHub Actions (Automated Type Check, Lint, & Build), Vercel (Continuous Deployment)
 
 ## Getting Started
 
@@ -55,9 +58,18 @@ PUSHER_SECRET=your_secret
    - Patient view: [http://localhost:3000/patient](http://localhost:3000/patient)
    - Staff view: [http://localhost:3000/staff](http://localhost:3000/staff)
 
+### Code Quality & Scripts
+- **Development Server:** `npm run dev`
+- **TypeScript Type Check:** `npm run typecheck`
+- **Linting (ESLint):** `npm run lint`
+- **Production Build:** `npm run build`
+
 ## Project Structure
 
 ```text
+├── .github/
+│   └── workflows/
+│       └── ci.yml             # GitHub Actions CI workflow (Type Check, Lint, Build)
 ├── app/
 │   ├── api/
 │   │   ├── patients/
