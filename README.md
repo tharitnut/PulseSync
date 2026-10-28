@@ -1,6 +1,6 @@
 # 🏥 PulseSync: Real-Time Patient Intake & Staff Monitoring Portal
 
-[![CI](https://github.com/tharitnut/AgnosCandidateAssignmentPatientStaff/actions/workflows/ci.yml/badge.svg)](https://github.com/tharitnut/AgnosCandidateAssignmentPatientStaff/actions/workflows/ci.yml)
+[![CI](https://github.com/tharitnut/PulseSync/actions/workflows/ci.yml/badge.svg)](https://github.com/tharitnut/PulseSync/actions/workflows/ci.yml)
 
 > 💡 **Note:** This project was developed as a technical challenge / take-home assignment focusing on real-time data synchronization, session lifecycle management, and robust form validation.
 
